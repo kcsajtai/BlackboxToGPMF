@@ -45,7 +45,9 @@ def read(f, camera_angle, x_flip, y_flip, z_flip, profile):
             #reordering gyro data for Hero 6 profile compatibility if the profile name contains Hero6
             if reorder:
                 reoordered_gyros=[]
-                reoordered_gyros.append(temp_gyros[2])
+                #Data order hero5/session 5(Z,X,Y) 0,1,2
+                #Data order hero5/session 5(-Y,X,Z) -2,1,0
+                reoordered_gyros.append(temp_gyros[2]*-1)
                 reoordered_gyros.append(temp_gyros[1]*-1)
                 reoordered_gyros.append(temp_gyros[0]*-1)
                 temp_gyros = reoordered_gyros   
