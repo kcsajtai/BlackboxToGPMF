@@ -149,7 +149,7 @@ def processVideo(source_video_path, blackbox_path, bboffset1, bboffset2, bbtime1
     camera_angle = int("-" + camera_angle)
     #print(camera_angle)
     
-    bbox_time, bbox_gyro = bbox.read(fbbox, camera_angle,  x_flip, y_flip, z_flip)
+    bbox_time, bbox_gyro = bbox.read(fbbox, camera_angle,  x_flip, y_flip, z_flip, profile)
     bbox_time = bbox.map_time(bbox_time, bb_offset1, bb_time1, bb_offset2, bb_time2)
     bbox_gyro, bbox_time = bbox.map_gyro(bbox_time, bbox_gyro, num_gpmf_chunks, gpmf.CHUNK_TIME, gpmf.GYRO_SAMPLES_PER_CHUNK)
     gpmf_chunks = gpmf.make_gpmf(bbox_gyro)
@@ -230,7 +230,7 @@ def processVideo(source_video_path, blackbox_path, bboffset1, bboffset2, bbtime1
     fm = io.BytesIO(templates.meta_trak)
     meta_trak = mp4.parse_atom(fm)
     
-    print(meta_trak)
+    #print(meta_trak)
 
     gpmf_chunks_sizes = list(map(len, gpmf_chunks))
 

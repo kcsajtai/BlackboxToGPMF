@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 
-def read(f, camera_angle, x_flip, y_flip, z_flip):
+def read(f, camera_angle, x_flip, y_flip, z_flip, profile):
     print(x_flip, y_flip, z_flip)
     reader = csv.reader(f)
     ca_rad = camera_angle*np.pi/180
@@ -13,6 +13,12 @@ def read(f, camera_angle, x_flip, y_flip, z_flip):
     time_at_arm = None
     t = []
     gyro = []
+    reorder = False
+    if profile.find("Hero6") != -1:
+        reorder = True
+        
+    print(profile," reorder: ",reorder)
+        
     for row in reader:
         if not gyro_index and len(row) > 2:
             # read the positions of the columns of interest
@@ -24,16 +30,27 @@ def read(f, camera_angle, x_flip, y_flip, z_flip):
                 time_at_arm = tm
             t.append(tm - time_at_arm)
             gyros = tuple(map(lambda x: float(x)*np.pi/180, row[gyro_index:gyro_index+3]))
-            flip_gyros = list(gyros)
+            temp_gyros = list(gyros)
+            
+            #flipping gyro data on user request 
             if x_flip==1:
-                flip_gyros[0]=flip_gyros[0]*-1
+                temp_gyros[0]=temp_gyros[0]*-1
                 
             if y_flip==1:
-                flip_gyros[1]=flip_gyros[1]*-1
+                temp_gyros[1]=temp_gyros[1]*-1
 
             if z_flip==1:
-                flip_gyros[2]=flip_gyros[2]*-1
-            gyros=tuple(flip_gyros)
+                temp_gyros[2]=temp_gyros[2]*-1
+            
+            #reordering gyro data for Hero 6 profile compatibility if the profile name contains Hero6
+            if reorder:
+                reoordered_gyros=[]
+                reoordered_gyros.append(temp_gyros[2])
+                reoordered_gyros.append(temp_gyros[1]*-1)
+                reoordered_gyros.append(temp_gyros[0]*-1)
+                temp_gyros = reoordered_gyros   
+
+            gyros=tuple(temp_gyros)
             
             #gyros = tuple(map(lambda x: float(x), row[gyro_index:gyro_index+3]))
             gyros = np.matmul(rot, gyros)          
