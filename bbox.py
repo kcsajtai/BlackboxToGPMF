@@ -31,27 +31,38 @@ def read(f, camera_angle, x_flip, y_flip, z_flip, profile):
             t.append(tm - time_at_arm)
             gyros = tuple(map(lambda x: float(x)*np.pi/180, row[gyro_index:gyro_index+3]))
             temp_gyros = list(gyros)
-            
+            #print(temp_gyros)
             #flipping gyro data on user request 
             if x_flip==1:
-                temp_gyros[0]=temp_gyros[0]*-1
+                temp_gyros[0]=temp_gyros[1]*-1
                 
             if y_flip==1:
-                temp_gyros[1]=temp_gyros[1]*-1
+                temp_gyros[1]=temp_gyros[2]*-1
 
             if z_flip==1:
-                temp_gyros[2]=temp_gyros[2]*-1
+                temp_gyros[2]=temp_gyros[0]*-1
             
             #reordering gyro data for Hero 6 profile compatibility if the profile name contains Hero6
             if reorder:
                 reoordered_gyros=[]
+             
                 #Data order hero5/session 5(Z,X,Y) 0,1,2
                 #Data order hero5/session 5(-Y,X,Z) -2,1,0
-                reoordered_gyros.append(temp_gyros[2]*-1)
-                reoordered_gyros.append(temp_gyros[1]*-1)
-                reoordered_gyros.append(temp_gyros[0]*-1)
+                if temp_gyros[2] != 0:
+                    reoordered_gyros.append(temp_gyros[2]*-1)
+                else:
+                    reoordered_gyros.append(temp_gyros[2])
+                if temp_gyros[1] != 0:
+                    reoordered_gyros.append(temp_gyros[1]*-1)
+                else:
+                    reoordered_gyros.append(temp_gyros[1])
+                if temp_gyros[0] != 0:
+                    reoordered_gyros.append(temp_gyros[0]) 
+                else:
+                    reoordered_gyros.append(temp_gyros[0])
                 temp_gyros = reoordered_gyros   
-
+            #print(temp_gyros)
+            #input("Press Enter to continue...")
             gyros=tuple(temp_gyros)
             
             #gyros = tuple(map(lambda x: float(x), row[gyro_index:gyro_index+3]))
