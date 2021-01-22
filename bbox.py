@@ -47,19 +47,10 @@ def read(f, camera_angle, x_flip, y_flip, z_flip, profile):
                 reoordered_gyros=[]
              
                 #Data order hero5/session 5(Z,X,Y) 0,1,2
-                #Data order hero5/session 5(-Y,X,Z) -2,1,0
-                if temp_gyros[2] != 0:
-                    reoordered_gyros.append(temp_gyros[2]*-1)
-                else:
-                    reoordered_gyros.append(temp_gyros[2])
-                if temp_gyros[1] != 0:
-                    reoordered_gyros.append(temp_gyros[1]*-1)
-                else:
-                    reoordered_gyros.append(temp_gyros[1])
-                if temp_gyros[0] != 0:
-                    reoordered_gyros.append(temp_gyros[0]) 
-                else:
-                    reoordered_gyros.append(temp_gyros[0])
+                #Data order hero6 (-Y,X,Z) -2,1,0
+                reoordered_gyros.append(temp_gyros[2]*-1)
+                reoordered_gyros.append(temp_gyros[1]*-1)
+                reoordered_gyros.append(temp_gyros[0]*-1) 
                 temp_gyros = reoordered_gyros   
             #print(temp_gyros)
             #input("Press Enter to continue...")
